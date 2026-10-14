@@ -4,8 +4,8 @@ __pycache__/
 data/raw/*.CSV
 data/raw/*.csv
 data/processed/*.csv
-results/figures/*
-results/tables/*
+#results/figures/*
+#results/tables/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !results/figures/.gitkeep
