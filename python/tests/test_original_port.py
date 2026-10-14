@@ -1,12 +1,4 @@
-"""
-Smoke + cross-check tests for rmlm.original_port (faithful port of the
-authors' R code). These are intentionally LOOSER than test_validated_lib.py:
-our own tests show this port has higher estimation variance on small
-synthetic examples (see docs/06_known_discrepancy.md) -- this is flagged
-as an open research question (gap #10 in docs/implementation_and_gaps_fa.md),
-not swept under the rug. If you tighten these thresholds after your own
-debugging, please also update that doc.
-"""
+
 import numpy as np
 import pytest
 import sys, pathlib

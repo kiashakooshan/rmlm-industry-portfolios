@@ -1,6 +1,6 @@
 import numpy as np
 
-# ---------- simulate a ground-truth RMLM ----------
+#simulate a ground-truth RMLM
 def simulate_rmlm(d, n, edge_density=0.35, alpha=2.0, seed=0):
     rng = np.random.default_rng(seed)
     C = np.zeros((d, d))
