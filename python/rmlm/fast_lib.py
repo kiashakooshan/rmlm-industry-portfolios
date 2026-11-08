@@ -57,8 +57,11 @@ def to_frechet(X, alpha=2.0):
 
 
 # ---------------------------------------------------------------- scalings
+RADIUS_COLS = None   # None: radius from all columns (paper). int m: radius from the first m columns only ("anchor radius")
+
+
 def top_idx(X, k):
-    R = np.linalg.norm(X, axis=1)
+    R = np.linalg.norm(X if RADIUS_COLS is None else X[:, :RADIUS_COLS], axis=1)
     return np.argsort(-R)[:k], R
 
 

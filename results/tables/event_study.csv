@@ -1,0 +1,4 @@
+date,radius,nshd_remove_event,null_remove_mean,null_remove_95,p_remove,nshd_before_after,null_split_mean
+1997-10-27,219.62,0.391,0.194,0.52,0.176,,0.801
+1989-10-13,202.6,0.436,0.194,0.52,0.078,,0.806
+1990-08-06,126.55,0.573,0.194,0.52,0.078,,0.808
