@@ -1,0 +1,8 @@
+window,start,end,n_edges,n_generations,sources,strongest_edges,mean_coef_of_edges,nshd_to_previous,nshd_to_full_sample,kendall_tau_order_vs_full,edges_stable_in_window_boot_ge07
+1989-1992,1989-06-01,1992-05-27,84,5,Mines,Whlsl→Hshld (0.80); Whlsl→Games (0.80); Whlsl→Servs (0.79); Whlsl→Meals (0.77); Whlsl→FabPr (0.76),0.3667334272016357,,0.7256637168141593,0.43441073486639825,0
+1990-1993,1990-05-31,1993-05-25,129,7,Mines,Mines→Hlth (0.66); Mines→Oil (0.64); Mines→Util (0.64); Other→FabPr (0.63); Mines→Paper (0.61),0.32004375557947223,0.6619718309859155,0.7490774907749077,0.3513865783898518,1
+1991-1994,1991-05-30,1994-05-24,87,8,Mines,Mines→Oil (0.85); Mines→Hlth (0.81); Mines→Games (0.67); Coal→Txtls (0.50); Oil→Chems (0.48),0.314372255030005,0.7407407407407407,0.7030567685589519,0.228692461901897,1
+1992-1995,1992-05-28,1995-05-23,111,8,Mines,Mines→Hlth (0.84); Mines→Autos (0.66); Carry→Cnstr (0.64); Mines→Games (0.64); Mines→Steel (0.63),0.3425945271280942,0.8080808080808081,0.849802371541502,0.1662430665688399,0
+1993-1996,1993-05-26,1996-05-21,101,9,Mines,Mines→Txtls (0.83); Mines→Coal (0.82); Mines→Hshld (0.61); Rtail→Fin (0.57); Rtail→Trans (0.57),0.31297028630326224,0.7452830188679245,0.7942386831275721,0.33277018575327644,0
+1994-1997,1994-05-25,1997-05-20,108,8,Coal,Coal→Mines (0.91); Coal→ElcEq (0.72); BusEq→Servs (0.68); Meals→FabPr (0.62); Coal→Meals (0.62),0.3290427104479126,0.7894736842105263,0.744,0.20010590416415985,1
+1995-1998,1995-05-24,1998-05-20,95,7,Coal,BusEq→Servs (0.80); Coal→Oil (0.67); BusEq→Steel (0.66); Coal→Mines (0.64); Coal→Food (0.63),0.32861968793781837,0.7438423645320197,0.6708860759493671,0.24464158648944354,0
