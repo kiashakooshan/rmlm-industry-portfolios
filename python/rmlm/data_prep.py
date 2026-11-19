@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 from pathlib import Path
 
-RAW_PATH = Path(__file__).resolve().parents[2] / "data" / "raw" / "30_Industry_Portfolios_Daily.CSV"
+RAW_PATH = Path(__file__).resolve().parents[2] / "data" / "raw" / "30_Industry_Portfolios_Daily.csv"
 OUT_LOSSES = Path(__file__).resolve().parents[2] / "data" / "processed" / "X_losses.csv"
 OUT_FRECHET = Path(__file__).resolve().parents[2] / "data" / "processed" / "X_frechet.csv"
 

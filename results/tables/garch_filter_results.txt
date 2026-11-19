@@ -1,0 +1,7 @@
+GARCH(1,1) filter experiment (python/garch_filter.py; own Gaussian-QMLE implementation), window 1989-06-01..1998-06-15, n=2285, d=30
+filter: mean persistence alpha+beta = 0.940 (min 0.61, max 1.00); lag-1 autocorrelation of squared series 0.136 -> 0.021
+boot_fixed_order (B=100): edges with freq >=.5/.7/.9
+  raw      : FULL [30, 4, 1]   FIXED [103, 51, 16]   mean Kendall tau 0.318  gen0: Mines 0.91, Coal 0.47
+  filtered : FULL [34, 7, 0]   FIXED [117, 67, 23]   mean Kendall tau 0.283  gen0: Mines 0.95, Coal 0.39
+gof_check (30 reference reps): raw T=0.1873 (ref mean 0.0921, 95th 0.1160); filtered T=0.1993 (ref mean 0.0862, 95th 0.1123)
+compare_methods filtered: single 142 edges; bootstrap freq>=0.5/0.7/0.9: 34/7/0; rolling edges 83,94,103,121,105,110,119; nSHD to previous 0.61-0.88

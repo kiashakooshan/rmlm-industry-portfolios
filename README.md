@@ -81,7 +81,11 @@ All real-data numbers come from the repository's own scripts on the 1989–1998 
 | 7 | Adding any extra column (even a shuffled one) makes it the only source and removes Mines and Coal as sources. | `null_proxy.csv` |
 | 8 | The causal-tail-coefficient order agrees with Algorithm 1 not at all on real data (Kendall τ ≈ −0.006). | `baseline_order.py` |
 | 9 | The real-data instability "fingerprint" (full vs fixed-order bootstrap) resembles a **misspecified** simulation (multivariate t) more than a correct max-linear one. This is suggestive, not proof. | `decomp` experiment in the proposal |
-| 10 | In simulation, thresholding at bootstrap frequency ≥ 0.5 raises precision (e.g. 0.27 → 0.73 at edge density 0.05) with about the same recall. A "calibrated" threshold brings no gain. | `proposed_exp.py` results in the proposal |
+| 10 | GARCH(1,1)-filtered data (clustering removed) show the **same** picture: full bootstrap `[34, 7, 0]` vs fixed order `[117, 67, 23]` edges at frequency ≥ 0.5/0.7/0.9 (unfiltered, same seed: `[30, 4, 1]` vs `[103, 51, 16]`), Kendall τ 0.28 vs 0.32, goodness-of-fit T = 0.199 (95th pct 0.112) vs 0.187 (0.116). Univariate volatility clustering is therefore not the main source. | `garch_filter.py` |
+| 11 | Relations are essentially **instantaneous**: for the 15 most frequent edges χ at lag 0 is 0.29 vs 0.07 averaged over lags 1…5 (chance 0.05); the peak is at lag 0 for 15/15 edges; no lead of parent over child (asymmetry −0.014; positive for 3/15). Small excess above chance at lags 1–2 (≈ 0.08–0.10) points to residual serial dependence. | `lag_check.py` |
+| 12 | **Adjacency is more stable than direction**: 68 pairs are adjacent in ≥ 50 % of resamples but only 30 directed edges reach 50 %; 13 vs 4 at 70 %; mean direction consistency 0.78 (28 of 68 pairs below 0.75). Consecutive rolling windows: directed nSHD 0.79 vs skeleton nSHD 0.67. | `graph_audit.py` |
+| 13 | The paper's rule (centroid over k) is almost as close to the bootstrap cloud as the best candidate (bootstrap medoid): mean nSHD 0.659 (k = 94) vs 0.640 (medoid) vs 0.655 (single run), but all are far (bootstrap graphs differ from each other by 0.71 on average). Window graphs are farther (0.77–0.81). | `graph_audit.py` |
+| 14 | In simulation, thresholding at bootstrap frequency ≥ 0.5 raises precision (e.g. 0.27 → 0.73 at edge density 0.05) with about the same recall. A "calibrated" threshold brings no gain. | `proposed_exp.py` results in the proposal |
 
 ---
 
@@ -151,6 +155,9 @@ rmlm-industry-portfolios/
 │   ├── compare_methods.py         single run vs bootstrap vs rolling windows
 │   ├── coef_audit.py              coefficient audit with figures (bootstrap + rolling)
 │   ├── boot_fixed_order.py        order vs coefficient instability decomposition
+│   ├── graph_audit.py             window graph drawings, 'which graph is closest to all others', directed vs undirected
+│   ├── lag_check.py               lagged tail dependence: are relations instantaneous or lead-lag?
+│   ├── garch_filter.py            GARCH(1,1) filter (volatility clustering removed), then re-run the audits
 │   ├── audit_extra.py             split-half reproducibility and proxy test
 │   ├── gof_check.py               tail-dependence goodness-of-fit
 │   ├── perm_edges.py              permutation test per edge + BH/Bonferroni
@@ -180,7 +187,7 @@ Scripts expect to be **run from inside `python/`** (they use relative paths such
 ```bash
 git clone https://github.com/kiashakooshan/rmlm-industry-portfolios.git
 cd rmlm-industry-portfolios
-pip install -r environment/requirements.txt scipy      # scipy is also needed by several audit scripts
+pip install -r environment/requirements.txt
 cd python
 pytest tests/ -v                                       # 7 tests, < 1 s
 python -m rmlm.data_prep                               # builds data/processed/X_losses.csv and X_frechet.csv
@@ -188,7 +195,7 @@ python run_pipeline.py                                 # published-style graph, 
 python compare_methods.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15 --boot 100
 ```
 
-Note: `scipy` is imported by `baseline_order.py`, `boot_fixed_order.py` and `coef_audit.py` but is not listed in `requirements.txt` (see [known issues](#14-known-issues-caveats-and-limitations)). Tested here with Python 3.13, numpy 2.5, pandas 3.0, scipy 1.18, matplotlib 3.11.
+ Tested here with Python 3.13, numpy 2.5, pandas 3.0, scipy 1.18, matplotlib 3.11.
 
 ---
 
@@ -302,6 +309,22 @@ Tests the *dilution hypothesis* (the extra column changes which days are selecte
 * **Real-data result:** `T = 0.188`, reference mean 0.093, 95th percentile 0.113 → rejected.
 * **Scope:** the max-linear model and its additive counterpart share the same limiting angular measure (Remark 1 of the paper). `T` therefore tests "at most d atoms", not "max versus sum".
 
+### `graph_audit.py` — window graphs, "which graph is the best centre?", directed vs undirected
+* **Does:** (1) draws the graph of every rolling window (rows = generations, top = sources); (2) builds the candidate graphs — single run, the paper's rule (centroid = minimum total nSHD among the graphs for k = 90…98 with the order estimated once), bootstrap medoid, consensus graphs (frequency ≥ 0.5 / 0.7) and every window graph — and measures each candidate's mean nSHD to the cloud of bootstrap graphs (lower = closer to all others = smaller expected error); (3) separates *adjacency* (undirected skeleton) from *direction*.
+* **Run:** `python graph_audit.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15 --boot 100`
+* **Writes** to `../results/graph_audit/`: `fig_window_graphs.png`, `fig_candidate_distance.png`, `fig_skeleton_vs_directed.png`, `candidate_distances.csv`, `pair_freq.csv`, `window_pairwise_nshd.csv`, `summary.txt`.
+* **Caution:** nSHD divides by |E1|+|E2|, so a *sparse* consensus graph is always "far" from dense graphs; the criterion favours dense graphs and should be read together with precision/recall-style criteria.
+
+### `lag_check.py` — with what lag are two nodes related?
+* **Does:** for the most frequent edges (parent j → child i) computes χ_h = P(U_i(t+h) > q | U_j(t) > q), q = 0.95, for h = −5…+5 (h > 0: parent leads), for the whole sample and for each rolling window, plus a lead–lag asymmetry. The RMLM is instantaneous, so this checks that assumption. Chance level is 1 − q = 0.05.
+* **Run:** `python lag_check.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15 --edges ../results/tables/edges_bootstrap.csv --top 15`
+* **Writes** to `../results/lag_check/`: `lag_table.csv`, `lag_by_window.csv`, `fig_lag.png`, `summary.txt`.
+
+### `garch_filter.py` — remove volatility clustering, then re-run the audits
+* **Does:** fits a Gaussian-QMLE GARCH(1,1) (own implementation, only numpy/scipy) to each industry's returns in the window, takes standardised residuals z and defines filtered losses `max(−z, 0)`. Writes a csv that can be passed to any script with `--csv`.
+* **Run:** `python garch_filter.py --raw ../data/raw/30_Industry_Portfolios_Daily.csv --start 1989-06-01 --end 1998-06-15 --out ../data/processed/X_losses_garch.csv`, then e.g. `python boot_fixed_order.py --csv ../data/processed/X_losses_garch.csv ...` and `python gof_check.py --csv ../data/processed/X_losses_garch.csv ...`.
+* **Result:** the filter removes the clustering (lag-1 autocorrelation of squares 0.136 → 0.021; mean α+β ≈ 0.94) but the instability and the rejection of the model remain (see section 2).
+
 ### `perm_edges.py` — permutation test per edge
 H0 for `j→i`: "column j has no extremal dependence on the rest". Null: circularly shift column `j` in time (keeps its margin and autocorrelation, breaks cross-dependence), keep the causal order fixed, re-estimate `A`, record `A[i, j]`. Writes `edges_permutation.csv` (`parent, child, a_hat, p, q_BH, p_bonf, sig_BH`). With 200 permutations, Bonferroni is practically impossible (smallest p is `1/(P+1)`).
 
@@ -405,6 +428,9 @@ python perm_edges.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --e
 python edge_test.py  --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15
 python baseline_order.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15
 python event_study.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15
+python graph_audit.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15 --boot 100
+python lag_check.py --csv ../data/processed/X_losses.csv --start 1989-06-01 --end 1998-06-15 --edges ../results/tables/edges_bootstrap.csv --top 15
+python garch_filter.py --raw ../data/raw/30_Industry_Portfolios_Daily.csv --start 1989-06-01 --end 1998-06-15 --out ../data/processed/X_losses_garch.csv
 python make_proxy.py dgs10
 python audit_extra.py proxy --csv ../data/processed/X_losses.csv --proxy ../data/raw/dgs10_proxy.csv --start 1989-06-01 --end 1998-06-15
 python null_proxy.py --csv ../data/processed/X_losses.csv --proxy ../data/raw/dgs10_proxy.csv --start 1989-06-01 --end 1998-06-15 --n 30
@@ -447,9 +473,9 @@ The audit scripts (`coef_audit.py`, `boot_fixed_order.py`, …) have **no unit t
 ## 14. Known issues, caveats and limitations
 
 **Code issues found while documenting (not yet fixed in the repository):**
-* `ctrl30.py` does `from rmlm_lib import *` directly. There is no `rmlm_lib` in the repo; change it to `from rmlm.fast_lib import *`. (The other scripts have a `try/except` fallback and work.)
-* `scipy` is required by `baseline_order.py`, `boot_fixed_order.py` and `coef_audit.py` but is missing from `requirements.txt` and `environment.yml`.
-* `data_prep.py` points to `30_Industry_Portfolios_Daily.CSV` (capital letters) while the committed file is `.csv`; this works on Windows but fails on case-sensitive systems (Linux, macOS by default).
+* *(fixed)* `ctrl30.py` imported a non-existent `rmlm_lib`; it now imports `rmlm.fast_lib`.
+* *(fixed)* `scipy` was missing from `requirements.txt` and `environment.yml`; added.
+* *(fixed)* `data_prep.py` pointed to `...Daily.CSV` while the file is `.csv` (failed on case-sensitive systems); now `.csv`.
 * Several files contain compiled `__pycache__` folders in git; `.gitignore` already lists them, so they can be removed with `git rm -r --cached`.
 * `.gitignore` ignores `data/processed/*.csv`, yet `X_losses.csv` and `X_frechet.csv` are in the repository.
 * `docs/project_structure_and_testing_fa.md` refers to other docs (`01_…`, `02_…`) that are not in the repository.
@@ -463,6 +489,7 @@ The audit scripts (`coef_audit.py`, `boot_fixed_order.py`, …) have **no unit t
 * Block length 20 is a fixed choice; sensitivity to block length, window length, `a`, `ε`, `k`, `δ` is not yet studied.
 * The tail index is assumed to be 2 for every industry; it is not estimated or tested.
 * No expanding-window or out-of-sample analysis.
+* The GARCH filter is univariate Gaussian GARCH(1,1) fitted once on the whole window (not refitted inside each bootstrap resample); GARCH-t, GJR/EGARCH and a common-volatility-factor filter were not tried.
 * The "dilution" explanation for the added-variable effect is a hypothesis; `dilution_real.py` has not been run on the real data.
 * The causal tail coefficient was implemented from memory of Gnecco et al. (2021) and must be verified.
 * The within-window bootstrap uses only 30 resamples per window.

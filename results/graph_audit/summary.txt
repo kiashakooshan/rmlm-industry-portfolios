@@ -1,0 +1,24 @@
+== Which graph is closest to the others? (mean nSHD to the 100 bootstrap graphs; lower = closer) ==
+                  candidate  n_edges  mean_nshd_to_bootstrap    sd  mean_nshd_to_windows  mean_skeleton_nshd_to_bootstrap
+           bootstrap medoid      130                   0.640 0.091                 0.731                            0.537
+          single run (k=91)      136                   0.655 0.065                 0.756                            0.533
+paper-style centroid (k=94)      138                   0.659 0.064                 0.762                            0.542
+        consensus freq>=0.5       30                   0.755 0.045                 0.852                            0.736
+           window 1989-1992       88                   0.771 0.066                 0.840                            0.679
+           window 1994-1997      107                   0.771 0.076                 0.799                            0.652
+           window 1995-1998       98                   0.774 0.054                 0.883                            0.656
+           window 1991-1994      115                   0.785 0.075                 0.817                            0.679
+           window 1990-1993      120                   0.787 0.063                 0.820                            0.661
+           window 1993-1996       96                   0.809 0.039                 0.827                            0.701
+           window 1992-1995      112                   0.811 0.048                 0.825                            0.709
+        consensus freq>=0.7        4                   0.947 0.015                 0.970                            0.946
+
+bootstrap graphs among themselves: mean nSHD = 0.708
+window graph closest to the other windows: 1994-1997; mean pairwise nSHD between windows = 0.830
+
+== Directed vs undirected (bootstrap) ==
+  threshold 0.5: directed edges 30   undirected adjacencies 68
+  threshold 0.7: directed edges 4   undirected adjacencies 13
+  threshold 0.9: directed edges 1   undirected adjacencies 1
+  pairs adjacent in >=50% of resamples: 68; mean direction consistency (share of the majority direction) = 0.78; pairs with consistency < 0.75: 28
+  rolling windows, consecutive-window distance: directed nSHD mean 0.79 (0.72-0.84); skeleton nSHD mean 0.67 (0.57-0.75)

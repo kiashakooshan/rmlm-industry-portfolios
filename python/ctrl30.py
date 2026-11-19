@@ -1,5 +1,5 @@
 import numpy as np, sys
-from rmlm_lib import *
+from rmlm.fast_lib import *
 res=[]
 for seed in range(3):
     rng=np.random.default_rng(seed)
