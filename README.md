@@ -529,3 +529,8 @@ The audit scripts (`coef_audit.py`, `boot_fixed_order.py`, …) have **no unit t
 *Items 1, 5, 6 and 8 were located on arXiv; the other bibliographic details should be checked against the sources before citing.*
 
 The authors' original R code is by Mario Krali (https://github.com/mariokrali) and is included unmodified under `R/original/`. No licence file has been added to this repository yet; add one before sharing the code publicly.
+
+## Final audit additions (Nov 19)
+- `python/coef_fixed_order.py` – same bootstrap resamples, order re-estimated (full) vs held fixed; coefficient intervals, selection frequency, "meaningful" rule. Output: `results/coef_fixed_order/`.
+- `python/sample_size_curve.py` – stability vs window length (1–9 years): stable edges (freq>=0.7, full vs fixed order), Kendall tau, nSHD. Output: `results/sample_size/`.
+- Findings: with order re-estimated 4 edges are stable and 0 are "meaningful"; with order fixed 51 and 40. Stability improves with sample size but even at 9 years only 6 (full) vs 68 (fixed) edges are stable; tau stays <= 0.42.

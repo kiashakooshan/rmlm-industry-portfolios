@@ -1,0 +1,20 @@
+B=100, block=20; edges considered: 762
+edges with freq>=0.7: FULL 4  FIXED 51
+'meaningful' edges (freq>=0.7 and 2.5% quantile > 0.05): FULL 0  FIXED 40
+top-15 edges by fixed-order frequency: mean interval width FULL 0.436  FIXED 0.215; mean 2.5% quantile FULL 0.001  FIXED 0.273
+parent child  freq_full  freq_fixed  full_q025  full_q975  fixed_q025  fixed_q975
+ Cnstr Books       0.14        1.00       0.00       0.31        0.32        0.53
+ Books Other       0.14        1.00       0.00       0.44        0.14        0.30
+ Mines   Oil       0.63        1.00       0.00       0.70        0.21        0.44
+   Oil Cnstr       0.54        1.00       0.00       0.60        0.31        0.55
+ Cnstr Whlsl       0.04        0.99       0.00       0.23        0.36        0.51
+ Cnstr Meals       0.05        0.99       0.00       0.23        0.32        0.48
+ Other Meals       0.34        0.99       0.00       0.55        0.11        0.28
+ Cnstr Trans       0.11        0.99       0.00       0.30        0.40        0.57
+ BusEq Servs       0.92        0.99       0.00       0.61        0.16        0.54
+ Cnstr Rtail       0.05        0.99       0.00       0.21        0.36        0.50
+ Cnstr Other       0.17        0.97       0.00       0.22        0.35        0.53
+ Meals Rtail       0.58        0.96       0.00       0.58        0.10        0.35
+ Cnstr Paper       0.08        0.95       0.00       0.28        0.35        0.52
+  Coal Txtls       0.80        0.94       0.01       0.72        0.36        0.76
+ Mines Whlsl       0.59        0.92       0.00       0.57        0.27        0.47
